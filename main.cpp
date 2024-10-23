@@ -1,57 +1,26 @@
-#include "threepp/threepp.hpp"
-
-#include "threepp/extras/imgui/ImguiContext.hpp"
-
-using namespace threepp;
-
-namespace {
-
-    auto createMesh() {
-        const auto geometry = BoxGeometry::create();
-        const auto material = MeshBasicMaterial::create();
-        material->color = Color::green;
-
-        auto mesh = Mesh::create(geometry, material);
-
-        return mesh;
-    }
-
-}
+#include "Spaceship.hpp"
+#include <iostream>
 
 int main() {
+    Spaceship spaceship;
 
-    Canvas canvas;
-    GLRenderer renderer{canvas.size()};
+    // Set initial velocity (move right at speed 1.0, and no movement in Y direction)
+    spaceship.setVelocity(1.0f, 0.0f);
 
-    PerspectiveCamera camera(60, canvas.aspect(), 0.1, 1000);
-    camera.position.z = 5;
+    // Move the spaceship in the game loop
+    spaceship.move();
 
-    Scene scene;
-    scene.background = Color::aliceblue;
+    // Get the updated position
+    float x, y;
+    spaceship.getPosition(x, y);
 
-    auto mesh = createMesh();
-    scene.add(mesh);
+    std::cout << "Spaceship position: (" << x << ", " << y << ")\n";
 
-    bool& meshVisible = mesh->visible;
+    // Rotate the spaceship by 15 degrees
+    spaceship.rotate(15.0f);
 
-    ImguiFunctionalContext ui(canvas.windowPtr(), [&meshVisible] {
-        ImGui::SetNextWindowPos({}, 0, {});
-               ImGui::SetNextWindowSize({230, 0}, 0);
-               ImGui::Begin("Mesh settings");
-               ImGui::Checkbox("Visible", &meshVisible);
+    // Get the updated rotation
+    std::cout << "Spaceship rotation: " << spaceship.getRotation() << " degrees\n";
 
-               ImGui::End();
-    });
-    // ui.makeDpiAware(); // to increase imgui size on high DPI screens
-
-    Clock clock;
-    float rotationSpeed = 0.5f;
-    canvas.animate([&] {
-        const auto dt = clock.getDelta();
-
-        mesh->rotation.y += rotationSpeed * dt;
-
-        renderer.render(scene, camera);
-        ui.render();
-    });
+    return 0;
 }

@@ -16,7 +16,10 @@ FetchContent_MakeAvailable(threepp)
 
 add_subdirectory(external)
 
-add_executable(astroids main.cpp)
+add_executable(astroids main.cpp
+        spaceship.cpp
+        spaceship.hpp
+)
 target_link_libraries(astroids PRIVATE threepp::threepp imgui::imgui)
 
 
