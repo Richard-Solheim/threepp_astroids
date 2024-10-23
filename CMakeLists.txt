@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.19)
-project(threepp_imgui_demo)
+project(astroids)
 
 set(CMAKE_CXX_STANDARD 20)
 
@@ -16,8 +16,8 @@ FetchContent_MakeAvailable(threepp)
 
 add_subdirectory(external)
 
-add_executable(threepp_demo main.cpp)
-target_link_libraries(threepp_demo PRIVATE threepp::threepp imgui::imgui)
+add_executable(astroids main.cpp)
+target_link_libraries(astroids PRIVATE threepp::threepp imgui::imgui)
 
 
 ######### Emscripten #######
