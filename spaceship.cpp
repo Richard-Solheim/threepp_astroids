@@ -23,7 +23,7 @@ void Spaceship::setVelocity(float vx, float vy) {
 }
 
 // Returns current position
-void Spaceship::getPosition(float& posX, float& posY) {
+void Spaceship::getPosition(float& posX, float& posY) const {
     posX = x;
     posY = y;
 }

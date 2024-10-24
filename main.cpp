@@ -1,26 +1,50 @@
-#include "Spaceship.hpp"
 #include <iostream>
+#include "threepp/threepp.hpp"
+#include "threepp/extras/imgui/ImguiContext.hpp"
+
+#include "Spaceship.hpp"
+
+namespace {
+
+    auto createMesh() {
+        const auto geometry = BoxGeometry::create();
+        const auto material = MeshBasicMaterial::create();
+        material->color = Color::darkred;
+
+        auto mesh = Mesh::create(geometry, material);
+
+        return mesh;
+    }
+
+}
 
 int main() {
-    Spaceship spaceship;
 
-    // Set initial velocity (move right at speed 1.0, and no movement in Y direction)
-    spaceship.setVelocity(1.0f, 0.0f);
+    Canvas canvas;
+    GLRenderer renderer{canvas.size()};
 
-    // Move the spaceship in the game loop
-    spaceship.move();
+    PerspectiveCamera camera(60, canvas.aspect(), 0.1, 1000);
+    camera.position.z = 5;
 
-    // Get the updated position
-    float x, y;
-    spaceship.getPosition(x, y);
+    Scene scene;
+    scene.background = Color::black;
 
-    std::cout << "Spaceship position: (" << x << ", " << y << ")\n";
+    auto mesh = createMesh();
+    scene.add(mesh);
 
-    // Rotate the spaceship by 15 degrees
-    spaceship.rotate(15.0f);
+    bool& meshVisible = mesh->visible;
 
-    // Get the updated rotation
-    std::cout << "Spaceship rotation: " << spaceship.getRotation() << " degrees\n";
+    ImguiFunctionalContext ui(canvas.windowPtr(), [&meshVisible] {
+        ImGui::SetNextWindowPos({}, 0, {});
+               ImGui::SetNextWindowSize({230, 0}, 0);
+               ImGui::Begin("Mesh settings");
+               ImGui::Checkbox("Visible", &meshVisible);
 
-    return 0;
+               ImGui::End();
+    });
+
+    canvas.animate([&] {
+        renderer.render(scene, camera);
+        ui.render();
+    });
 }

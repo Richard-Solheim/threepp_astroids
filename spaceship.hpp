@@ -1,7 +1,7 @@
 #ifndef SPACESHIP_HPP
 #define SPACESHIP_HPP
 
-#include <threepp/threepp.hpp>
+#include "threepp/threepp.hpp"
 using namespace threepp;
 
 class Spaceship {
@@ -26,7 +26,7 @@ public:
     void setVelocity(float vx, float vy);
 
     // Get current position
-    void getPosition(float& posX, float& posY);
+    void getPosition(float& posX, float& posY) const;
 
     // Get current rotation
     float getRotation() const;
