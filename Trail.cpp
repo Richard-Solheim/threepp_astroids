@@ -50,7 +50,7 @@ std::shared_ptr<Mesh> Trail::createTrailCircle(const Vector3& position) {
 
     // Create a material for the trail segment (circle)
     auto material = MeshBasicMaterial::create();
-    material->color = Color::white;
+    material->color = Color::orange;
     material->side = Side::Double;          // Makes it visible from both sides
 
     // Create the circle mesh and set its position

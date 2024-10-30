@@ -21,5 +21,7 @@ add_executable(astroids main.cpp
         spaceship.hpp
         Trail.cpp
         Trail.hpp
+        Stars.cpp
+        Stars.hpp
 )
 target_link_libraries(astroids PRIVATE threepp::threepp imgui::imgui)

@@ -1,5 +1,6 @@
-#include "threepp/threepp.hpp"
+#include "Stars.hpp"
 #include "threepp/extras/imgui/ImguiContext.hpp"
+#include "threepp/threepp.hpp"
 
 #include <set>
 
@@ -27,6 +28,10 @@ int main() {
 
     // Create trail effect for the spaceship and add to scene
     auto trail = std::make_shared<Trail>(100, 0.5f, 1.0f);  // Max 100 points, 0.5 distance between, 0.3 width
+
+    // Create a star field with 200 stars spread over range of 100 units
+    auto stars = std::make_shared<Stars>(200, 100.0f);
+    scene.add(stars->getStarsGroup());  // Add the star group to the scene
 
     // Variables to track movement states based on user input
     bool rotateLeft = false;
