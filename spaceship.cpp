@@ -30,14 +30,15 @@ std::shared_ptr<Mesh> Spaceship::getMesh() const {
     return mesh;
 }
 
-// Rotates the spaceship to the left (counterclockwise)
+// Rotates the spaceship to the left (clockwise)
 void Spaceship::rotateLeft() {
-    rotation -= rotationSpeed;  // Decrease rotation angle
+    rotation += rotationSpeed;  // Increase rotation angle
     updateRotation();           // Apply new rotation to mesh
 }
-// Rotates the spaceship to the right (clockwise)
+
+// Rotates the spaceship to the right (counterclockwise)
 void Spaceship::rotateRight() {
-    rotation += rotationSpeed;  // Increase rotation angle
+    rotation -= rotationSpeed;  // Decrease rotation angle
     updateRotation();           // Apply new rotation to mesh
 }
 
@@ -49,8 +50,6 @@ void Spaceship::moveForward() {
     // Move spaceship in calculated direction with forward speed
     mesh->position += direction * forwardSpeed;
 
-    // // Wrap around screen edges if necessary
-    // wrapAround(mesh->position);
 }
 
 // Updates spaceship visual rotation by applying current angle to mesh
@@ -58,16 +57,3 @@ void Spaceship::updateRotation() {
     mesh->rotation.z = rotation;    // Set rotation of mesh to current angle
 }
 
-// // Wraps spaceship around edges if move out of bounds
-// void Spaceship::wrapAround(Vector3 &position) {
-//     const float witdh = 42.0f;   // Screen boundary widht
-//     const float height = 25.0f;  // Screen boundary height
-//
-//     // If the spaceship moves beyond the right edge, bring it to the left edge
-//     if (position.x > witdh) position.x = -witdh;
-//     else if (position.x < -witdh) position.x = witdh;
-//
-//     // If the spaceship moves beyond the top, bring it to the bottom
-//     if (position.y > height) position.y = -height;
-//     else if (position.y < -height) position.y = height;
-// }

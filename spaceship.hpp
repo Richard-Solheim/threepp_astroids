@@ -26,7 +26,6 @@ private:
 
     // Internal helpers for updating rotation and screen wrapping
     void updateRotation();              // Applies the current rotation to the mesh
-    // void wrapAround(Vector3& position); // Wraps the spaceship around the screen edges
 };
 
 #endif //SPACESHIP_HPP

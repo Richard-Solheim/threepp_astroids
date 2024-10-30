@@ -26,7 +26,7 @@ int main() {
     scene.add(spaceship->getMesh());
 
     // Create trail effect for the spaceship and add to scene
-    auto trail = std::make_shared<Trail>(100, 0.5f, 0.3f);  // Max 100 points, 0.5 distance between, 0.3 width
+    auto trail = std::make_shared<Trail>(100, 0.5f, 1.0f);  // Max 100 points, 0.5 distance between, 0.3 width
 
     // Variables to track movement states based on user input
     bool rotateLeft = false;

@@ -14,12 +14,19 @@ void Trail::addPoint(const Vector3& point) {
     // Only add new trail point if far enough from last point
     if (trailPoints.empty() || (point.distanceTo(lastPoint) >= pointSpacing)) {
         // Creates new circle mesh at this position and add to trail
-        trailPoints.push_back(createTrailCircle(point));
+        auto newTrailCircle = createTrailCircle(point);
+        trailPoints.push_back(newTrailCircle);
         lastPoint = point;      // Update last point to the new one
 
         // Remove the oldest point if max is reached
         if (trailPoints.size() > maxPoints) {
-            trailPoints.pop_back(); // Efficient removal from back
+            auto oldestTrail = trailPoints.front();
+            trailPoints.pop_front();
+
+            // Check if oldest trail has a parent, then remove from scene
+            if (oldestTrail->parent) {
+                oldestTrail->parent->remove(*oldestTrail);
+            }
         }
     }
 }
