@@ -23,24 +23,27 @@ int main() {
     Scene scene;
     scene.background = Color::black;
 
-    // Define play area
-    float playArea = 100.0f;
+    // Definiteions to change the game
+    float playArea = 100.0f;            // Defining play area
+    float starNumber = 400;             // Defining amount of stars
+    float maxAsteroids = 25;            // Defining max number asteroids
 
     // Create spaceship mesh with boundary limits and add to scene
     auto spaceship = std::make_shared<Spaceship>(playArea, playArea);
     scene.add(spaceship->getMesh());
 
     // Create trail effect for the spaceship and add to scene
-    auto trail = std::make_shared<Trail>(25, 0.5f, 0.8f);  // Max 100 points, 0.5 distance between, 0.3 width
+    auto trail = std::make_shared<Trail>(25, 0.5f, 0.8f);  // Max 25 points, 0.5 distance between, 0.8 width
 
     // Create a star field with stars spread over range of the play area
-    float starNumber = 400;
     auto stars = std::make_shared<Stars>(starNumber, playArea);
     scene.add(stars->getStarsGroup());  // Add the star group to the scene
 
     // Create asteroid manager
-    float maxAsteroids = 25;
-    auto asteroids = std::make_shared<Asteroids>(maxAsteroids, playArea, playArea);
+    float spawnRadius = 50.0f;
+    float despawnRadius = 60.0f;
+    auto asteroids = std::make_shared<Asteroids>(maxAsteroids, spawnRadius, despawnRadius);
+
     for (const auto& asteroidMesh : asteroids->getAsteroidMeshes()) {
         scene.add(asteroidMesh);
     }
@@ -99,7 +102,7 @@ int main() {
         }
 
         // Update asteroids, remove out of bounds and respawn
-        asteroids->update();
+        asteroids->update(spaceship->getMesh()->position);
         for (const auto& asteroidMesh : asteroids->getAsteroidMeshes()) {
             if (addedAsteroidMeshes.find(asteroidMesh) == addedAsteroidMeshes.end()) {
                 scene.add(asteroidMesh);
