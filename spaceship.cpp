@@ -5,7 +5,9 @@ using namespace threepp;
 
 
 // Constructor: initializes the spaceship's geometry, color, and initial values
-Spaceship::Spaceship() : rotation(0.0f), rotationSpeed(0.05f), forwardSpeed(0.2f) {
+Spaceship::Spaceship(float boundaryX, float boundaryY)
+            : rotation(0.0f), rotationSpeed(0.05f), forwardSpeed(0.2f),
+              minX(-boundaryX), maxX(boundaryX), minY(-boundaryY), maxY(boundaryY) {
 
     // Define the triangle shape vertices for the spaceship
     auto geometry = BufferGeometry::create();
@@ -45,10 +47,19 @@ void Spaceship::rotateRight() {
 // Moves spaceship forward in facing direction
 void Spaceship::moveForward() {
     // calculate the movement direction based on current rotation
-    Vector3 direction(std::sin(-rotation), std::cos(rotation), 0.0f);
+    Vector3 direction(std::sin(-rotation), std::cos(rotation), 0);
 
-    // Move spaceship in calculated direction with forward speed
-    mesh->position += direction * forwardSpeed;
+    // Calculate new position components
+    float newX = mesh->position.x + direction.x * forwardSpeed;
+    float newY = mesh->position.y + direction.y * forwardSpeed;
+
+    // Check if each component is at the borders
+    if (newX >= minX && newX <= maxX) {
+        mesh->position.x = newX;    // Update x position if within bounds
+    }
+    if (newY >= minY && newY <= maxY) {
+        mesh->position.y = newY;
+    }
 
 }
 

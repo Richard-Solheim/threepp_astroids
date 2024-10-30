@@ -38,7 +38,7 @@ std::shared_ptr<Mesh> Trail::createTrailCircle(const Vector3& position) {
 
     // Generate vertices for a circular shape to use for each trail segment
     std::vector<float> vertices;
-    int sides = 25;
+    int sides = 12;
     float radius = trailWidth / 2.0f;
     for (int i = 0; i < sides; i++) {
         float theta = (i * 2.0f * M_PI) / sides;    // Calculate angle for each vertex

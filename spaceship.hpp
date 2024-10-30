@@ -7,8 +7,8 @@ using namespace threepp;
 
 class Spaceship {
 public:
-    // Constructor to initialize the spaceship geometry and basic properties
-    Spaceship();
+    // Constructor to initialize the spaceship geometry and boundaries
+    Spaceship(float boundaryX, float boundaryY);
 
     // Methods for controlling spaceship movement
     void rotateLeft();      // Rotate counterclockwise
@@ -23,6 +23,10 @@ private:
     float rotation;                // Current rotation angle in radians
     float rotationSpeed;           // Speed ship rotates with
     float forwardSpeed;            // Speed ship moves forward with
+
+    // Boundary limits for movement
+    float minX, maxX;   // X boundaries
+    float minY, maxY;   // Y boundaries
 
     // Internal helpers for updating rotation and screen wrapping
     void updateRotation();              // Applies the current rotation to the mesh

@@ -22,15 +22,18 @@ int main() {
     Scene scene;
     scene.background = Color::black;
 
-    // Create spaceship mesh and add to scene
-    auto spaceship = std::make_shared<Spaceship>();
+    // Define play area
+    float playArea = 100.0f;
+
+    // Create spaceship mesh with boundary limits and add to scene
+    auto spaceship = std::make_shared<Spaceship>(playArea, playArea);
     scene.add(spaceship->getMesh());
 
     // Create trail effect for the spaceship and add to scene
-    auto trail = std::make_shared<Trail>(100, 0.5f, 1.0f);  // Max 100 points, 0.5 distance between, 0.3 width
+    auto trail = std::make_shared<Trail>(25, 0.5f, 0.8f);  // Max 100 points, 0.5 distance between, 0.3 width
 
-    // Create a star field with 200 stars spread over range of 100 units
-    auto stars = std::make_shared<Stars>(200, 100.0f);
+    // Create a star field with 400 stars spread over range of the play area
+    auto stars = std::make_shared<Stars>(400, playArea);
     scene.add(stars->getStarsGroup());  // Add the star group to the scene
 
     // Variables to track movement states based on user input
