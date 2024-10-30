@@ -17,11 +17,15 @@ FetchContent_MakeAvailable(threepp)
 add_subdirectory(external)
 
 add_executable(astroids main.cpp
-        spaceship.cpp
-        spaceship.hpp
+        Spaceship.cpp
+        Spaceship.hpp
         Trail.cpp
         Trail.hpp
         Stars.cpp
         Stars.hpp
+        Asteroid.cpp
+        Asteroid.hpp
+        Asteroids.cpp
+        Asteroids.hpp
 )
 target_link_libraries(astroids PRIVATE threepp::threepp imgui::imgui)

@@ -1,11 +1,12 @@
-#include "Stars.hpp"
 #include "threepp/extras/imgui/ImguiContext.hpp"
 #include "threepp/threepp.hpp"
 
 #include <set>
 
-#include "spaceship.hpp"
+#include "Spaceship.hpp"
 #include "Trail.hpp"
+#include "Stars.hpp"
+#include "Asteroids.hpp"
 
 using namespace threepp;
 
@@ -32,9 +33,17 @@ int main() {
     // Create trail effect for the spaceship and add to scene
     auto trail = std::make_shared<Trail>(25, 0.5f, 0.8f);  // Max 100 points, 0.5 distance between, 0.3 width
 
-    // Create a star field with 400 stars spread over range of the play area
-    auto stars = std::make_shared<Stars>(400, playArea);
+    // Create a star field with stars spread over range of the play area
+    float starNumber = 400;
+    auto stars = std::make_shared<Stars>(starNumber, playArea);
     scene.add(stars->getStarsGroup());  // Add the star group to the scene
+
+    // Create asteroid manager
+    float maxAsteroids = 25;
+    auto asteroids = std::make_shared<Asteroids>(maxAsteroids, playArea, playArea);
+    for (const auto& asteroidMesh : asteroids->getAsteroidMeshes()) {
+        scene.add(asteroidMesh);
+    }
 
     // Variables to track movement states based on user input
     bool rotateLeft = false;
@@ -79,12 +88,22 @@ int main() {
 
         // Set to store meshes that have been added to scene
         std::set<std::shared_ptr<Mesh>> addedTrailMeshes;
+        std::set<std::shared_ptr<Mesh>> addedAsteroidMeshes;
 
         // Add each part of trail to scene if not already present
         for (const auto& trailMesh : trail->getTrailMeshes()) {
             if (addedTrailMeshes.find(trailMesh) == addedTrailMeshes.end()) {
                 scene.add(trailMesh);
                 addedTrailMeshes.insert(trailMesh);
+            }
+        }
+
+        // Update asteroids, remove out of bounds and respawn
+        asteroids->update();
+        for (const auto& asteroidMesh : asteroids->getAsteroidMeshes()) {
+            if (addedAsteroidMeshes.find(asteroidMesh) == addedAsteroidMeshes.end()) {
+                scene.add(asteroidMesh);
+                addedAsteroidMeshes.insert(asteroidMesh);
             }
         }
 
