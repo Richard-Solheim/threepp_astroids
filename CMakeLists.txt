@@ -19,5 +19,7 @@ add_subdirectory(external)
 add_executable(astroids main.cpp
         spaceship.cpp
         spaceship.hpp
+        Trail.cpp
+        Trail.hpp
 )
 target_link_libraries(astroids PRIVATE threepp::threepp imgui::imgui)

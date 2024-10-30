@@ -1,10 +1,15 @@
 #include "threepp/threepp.hpp"
 #include "threepp/extras/imgui/ImguiContext.hpp"
+
+#include <set>
+
 #include "spaceship.hpp"
+#include "Trail.hpp"
 
 using namespace threepp;
 
 int main() {
+    // Set up the rendering canvas and renderer
     Canvas canvas;
     GLRenderer renderer{canvas.size()};
 
@@ -12,6 +17,7 @@ int main() {
     PerspectiveCamera camera(60, canvas.aspect(), 0.1, 1000);
     camera.position.z = 40; // Initial distance from spaceship
 
+    // Set up the scene with black background
     Scene scene;
     scene.background = Color::black;
 
@@ -19,6 +25,10 @@ int main() {
     auto spaceship = std::make_shared<Spaceship>();
     scene.add(spaceship->getMesh());
 
+    // Create trail effect for the spaceship and add to scene
+    auto trail = std::make_shared<Trail>(100, 0.5f, 0.3f);  // Max 100 points, 0.5 distance between, 0.3 width
+
+    // Variables to track movement states based on user input
     bool rotateLeft = false;
     bool rotateRight = false;
     bool moveForward = false;
@@ -36,6 +46,7 @@ int main() {
        if (event.key == Key::W) moveForward = false;
     });
 
+    // Adding key listeners to canvas to capture user input
     canvas.addKeyListener(*keyPressedListener);
     canvas.addKeyListener(*keyReleasedListener);
 
@@ -50,11 +61,24 @@ int main() {
         Vector3 spaceshipPosition = spaceship->getMesh()->position;
         camera.position.x = spaceshipPosition.x;
         camera.position.y = spaceshipPosition.y;
-
         camera.position.z = spaceshipPosition.z + 40;
 
         // Ensure camera looks at spaceship
         camera.lookAt(spaceshipPosition);
+
+        // Add current spaceship position to trail
+        trail->addPoint(spaceshipPosition);
+
+        // Set to store meshes that have been added to scene
+        std::set<std::shared_ptr<Mesh>> addedTrailMeshes;
+
+        // Add each part of trail to scene if not already present
+        for (const auto& trailMesh : trail->getTrailMeshes()) {
+            if (addedTrailMeshes.find(trailMesh) == addedTrailMeshes.end()) {
+                scene.add(trailMesh);
+                addedTrailMeshes.insert(trailMesh);
+            }
+        }
 
         // Render scene
         renderer.render(scene, camera);
