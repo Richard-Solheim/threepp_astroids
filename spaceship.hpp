@@ -2,34 +2,26 @@
 #define SPACESHIP_HPP
 
 #include "threepp/threepp.hpp"
+
 using namespace threepp;
 
 class Spaceship {
-private:
-    // Variable for position and velocity
-    float x, y;         // Position of spaceship
-    float velocityX;    // Velocity along x-axis
-    float velocityY;    // Velocity along y-axis
-    float rotation;     // Rotation angle of the spaceship
-
 public:
-    // Constructor
     Spaceship();
 
-    // Moving the spaceship based on velocity
-    void move();
+    void rotateLeft();
+    void rotateRight();
+    void moveForward();
+    std::shared_ptr<Mesh> getMesh() const;
 
-    // Rotating spaceship
-    void rotate(float angle);
+private:
+    std::shared_ptr<Mesh> spaceshipMesh;
+    float spaceshipRotation;
+    float spaceshipRotationSpeed;
+    float spaceshipForwardSpeed;
 
-    // Setting velocity
-    void setVelocity(float vx, float vy);
-
-    // Get current position
-    void getPosition(float& posX, float& posY) const;
-
-    // Get current rotation
-    float getRotation() const;
+    void updateRotation();
+    void wrapAround(Vector3& position);
 };
 
 #endif //SPACESHIP_HPP

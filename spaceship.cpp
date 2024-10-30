@@ -1,35 +1,55 @@
 #include "spaceship.hpp"
+#include <cmath>
 
 using namespace threepp;
 
-// Initialize spaceship with default values
-Spaceship::Spaceship() : x(0), y(0), velocityX(0), velocityY(0), rotation(0) {}
+Spaceship::Spaceship() : spaceshipRotation(0.0f), spaceshipRotationSpeed(0.05f), spaceshipForwardSpeed(0.2f) {
 
-// Move spaceship based on velocity
-void Spaceship::move() {
-    x += velocityX;     // Update X based on velocity in X direction
-    y += velocityY;     // Update Y based on velocity in Y direction
+    auto geometry = BufferGeometry::create();
+    std::vector<float> vertices = {
+        0.0f, 1.0f, 0.0f,      // Tip of triangle
+        -1.0f, -1.0f, 0.0f,    // Bottom left corner
+        1.0f, -1.0f, 0.0f      // Bottom right corner
+    };
+    geometry->setAttribute("position", FloatBufferAttribute::create(vertices, 3));
+
+    auto material = MeshBasicMaterial::create();
+    material->color = Color::darkred;
+
+    spaceshipMesh = Mesh::create(geometry, material);
+    spaceshipMesh->position.set(0, 0, 0);
 }
 
-// Rotates spaceship by adding the angle to current location
-void Spaceship::rotate(float angle) {
-    rotation += angle;  // Adjust rotation angle
+std::shared_ptr<Mesh> Spaceship::getMesh() const {
+    return spaceshipMesh;
 }
 
-// Sets the velocity for the spaceship (speed in X and Y direction)
-void Spaceship::setVelocity(float vx, float vy) {
-    velocityX = vx;
-    velocityY = vy;
+void Spaceship::rotateLeft() {
+    spaceshipRotation = spaceshipRotation - spaceshipRotationSpeed;
+    updateRotation();
 }
 
-// Returns current position
-void Spaceship::getPosition(float& posX, float& posY) const {
-    posX = x;
-    posY = y;
+void Spaceship::rotateRight() {
+    spaceshipRotation = spaceshipRotation + spaceshipRotationSpeed;
+    updateRotation();
 }
 
-// Returns current angle
-float Spaceship::getRotation() const {
-    return rotation;
+void Spaceship::moveForward() { // Fin enklere måte å løse!!!
+    Vector3 direction(std::sin(-spaceshipRotation), std::cos(spaceshipRotation), 0.0f);
+    spaceshipMesh->position += direction * spaceshipForwardSpeed;
+    wrapAround(spaceshipMesh->position);
 }
 
+void Spaceship::updateRotation() {
+    spaceshipMesh->rotation.z = spaceshipRotation;
+}
+void Spaceship::wrapAround(Vector3 &position) {
+    const float witdh = 42.0f;
+    const float height = 25.0f;
+
+    if (position.x > witdh) position.x = -witdh;
+    else if (position.x < -witdh) position.x = witdh;
+
+    if (position.y > height) position.y = -height;
+    else if (position.y < -height) position.y = height;
+}

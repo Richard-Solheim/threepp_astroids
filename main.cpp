@@ -1,50 +1,66 @@
-#include <iostream>
 #include "threepp/threepp.hpp"
 #include "threepp/extras/imgui/ImguiContext.hpp"
+#include "spaceship.hpp"
 
-#include "Spaceship.hpp"
-
-namespace {
-
-    auto createMesh() {
-        const auto geometry = BoxGeometry::create();
-        const auto material = MeshBasicMaterial::create();
-        material->color = Color::darkred;
-
-        auto mesh = Mesh::create(geometry, material);
-
-        return mesh;
-    }
-
-}
+using namespace threepp;
 
 int main() {
-
     Canvas canvas;
     GLRenderer renderer{canvas.size()};
 
     PerspectiveCamera camera(60, canvas.aspect(), 0.1, 1000);
-    camera.position.z = 5;
+    camera.position.z = 40;
 
     Scene scene;
     scene.background = Color::black;
 
-    auto mesh = createMesh();
-    scene.add(mesh);
+    // Create spaceship mesh
+    auto spaceship = std::make_shared<Spaceship>();
+    scene.add(spaceship->getMesh());
 
-    bool& meshVisible = mesh->visible;
+    bool rotateLeft = false;
+    bool rotateRight = false;
+    bool moveForward = false;
 
-    ImguiFunctionalContext ui(canvas.windowPtr(), [&meshVisible] {
-        ImGui::SetNextWindowPos({}, 0, {});
-               ImGui::SetNextWindowSize({230, 0}, 0);
-               ImGui::Begin("Mesh settings");
-               ImGui::Checkbox("Visible", &meshVisible);
-
-               ImGui::End();
+    auto keyPressedListener = std::make_shared<KeyAdapter>(KeyAdapter::Mode::KEY_PRESSED, [&](KeyEvent event) {
+        if (event.key == Key::A) {
+            rotateLeft = true;
+        }
+        if (event.key == Key::D) {
+            rotateRight = true;
+        }
+        if (event.key == Key::W) {
+            moveForward = true;
+        }
     });
+
+    auto keyReleasedListener = std::make_shared<KeyAdapter>(KeyAdapter::Mode::KEY_RELEASED, [&](KeyEvent event) {
+       if (event.key == Key::A) {
+           rotateLeft = false;
+       }
+       if (event.key == Key::D) {
+           rotateRight = false;
+       }
+       if (event.key == Key::W) {
+           moveForward = false;
+       }
+    });
+
+    canvas.addKeyListener(*keyPressedListener);
+    canvas.addKeyListener(*keyReleasedListener);
 
     canvas.animate([&] {
+        if (rotateLeft) {
+            spaceship->rotateLeft();
+        }
+        if (rotateRight) {
+            spaceship->rotateRight();
+        }
+        if (moveForward) {
+            spaceship->moveForward();
+        }
+
         renderer.render(scene, camera);
-        ui.render();
     });
+
 }
