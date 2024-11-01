@@ -2,12 +2,14 @@
 #include "threepp/threepp.hpp"
 
 #include <set>
+#include <cmath>
 
 #include "Spaceship.hpp"
 #include "Trail.hpp"
 #include "Stars.hpp"
 #include "Asteroids.hpp"
 #include "CollisionHandler.hpp"
+#include "Bullet.hpp"
 
 using namespace threepp;
 
@@ -36,6 +38,9 @@ int main() {
     // Create trail effect for the spaceship and add to scene
     auto trail = std::make_shared<Trail>(25, 0.5f, 0.8f);  // Max 25 points, 0.5 distance between, 0.8 width
 
+    // Container for bullets
+    std::vector<std::shared_ptr<Bullet>> bullets;
+
     // Create a star field with stars spread over range of the play area
     auto stars = std::make_shared<Stars>(starNumber, playArea);
     scene.add(stars->getStarsGroup());  // Add the star group to the scene
@@ -55,18 +60,21 @@ int main() {
     bool rotateLeft = false;
     bool rotateRight = false;
     bool moveForward = false;
+    bool fireBullet = false;
 
     // Controls for spaceship
     auto keyPressedListener = std::make_shared<KeyAdapter>(KeyAdapter::Mode::KEY_PRESSED, [&](KeyEvent event) {
         if (event.key == Key::A) rotateLeft = true;
         if (event.key == Key::D) rotateRight = true;
         if (event.key == Key::W) moveForward = true;
+        if (event.key == Key::SPACE) fireBullet = true;
     });
 
     auto keyReleasedListener = std::make_shared<KeyAdapter>(KeyAdapter::Mode::KEY_RELEASED, [&](KeyEvent event) {
        if (event.key == Key::A) rotateLeft = false;
        if (event.key == Key::D) rotateRight = false;
        if (event.key == Key::W) moveForward = false;
+       if (event.key == Key::SPACE) fireBullet = false;
     });
 
     // Adding key listeners to canvas to capture user input
@@ -102,6 +110,35 @@ int main() {
                 scene.add(trailMesh);
                 addedTrailMeshes.insert(trailMesh);
             }
+        }
+
+        // Update existing bullets
+        for (auto it = bullets.begin(); it != bullets.end();) {
+            auto& bullet = *it;
+            bullet->update();
+
+            // Remove when out of bounds
+            if (bullet->isOutOfBounds(playArea, playArea)) {
+                scene.remove(*bullet->getMesh());
+                it = bullets.erase(it);
+            } else {
+                ++it;
+            }
+        }
+
+        // Fire a new bullet when SPACE is pressed
+        if (fireBullet) {
+            // Access rotation of spaceship mesh
+            float rotationZ = spaceship->getMesh()->rotation.z;     // Get Z-axis rotation
+
+            // Calculate direction vector from ship rotation
+            Vector3 direction(-std::sin(rotationZ), std::cos(rotationZ), 0);
+
+            // Create and fire bullet
+            auto bullet = std::make_shared<Bullet>(spaceship->getMesh()->position, direction);
+            bullets.push_back(bullet);
+            scene.add(bullet->getMesh());
+            fireBullet = false;                 // Prevent endless firing
         }
 
         // Update asteroids, remove out of bounds and respawn

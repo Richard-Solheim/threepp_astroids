@@ -2,6 +2,7 @@
 #define COLLISIONHANDLER_HPP
 
 #include "Asteroids.hpp"
+#include "Bullet.hpp"
 #include "threepp/threepp.hpp"
 #include <memory>
 #include <vector>
@@ -16,8 +17,8 @@ public:
     // Check for collision between spaceship and the list of asteroids
     bool checkCollision(const std::shared_ptr<Mesh>& ship, const std::vector<std::shared_ptr<Mesh>>& asteroids);
 
-    // Handles collision effect (explosion)
-    static void handleCollision(const std::shared_ptr<Mesh>& ship, Asteroids& asteroids, Scene& scene);
+    // Handles collision between the ship and an asteroid
+    static auto handleCollision(const std::shared_ptr<Mesh> &ship, Asteroids &asteroids, Scene &scene) -> void;
 
 private:
     float collisionDistance;    // Distance collision is detected at

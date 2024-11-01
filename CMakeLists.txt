@@ -29,5 +29,7 @@ add_executable(astroids main.cpp
         Asteroids.hpp
         CollisionHandler.cpp
         CollisionHandler.hpp
+        Bullet.cpp
+        Bullet.hpp
 )
 target_link_libraries(astroids PRIVATE threepp::threepp imgui::imgui)
