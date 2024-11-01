@@ -7,6 +7,7 @@
 #include "Trail.hpp"
 #include "Stars.hpp"
 #include "Asteroids.hpp"
+#include "CollisionHandler.hpp"
 
 using namespace threepp;
 
@@ -40,13 +41,15 @@ int main() {
     scene.add(stars->getStarsGroup());  // Add the star group to the scene
 
     // Create asteroid manager
-    float spawnRadius = 50.0f;
-    float despawnRadius = 60.0f;
-    auto asteroids = std::make_shared<Asteroids>(maxAsteroids, spawnRadius, despawnRadius);
+    float spawnRange = 75.0f;
+    auto asteroids = std::make_shared<Asteroids>(maxAsteroids, spawnRange);
 
     for (const auto& asteroidMesh : asteroids->getAsteroidMeshes()) {
         scene.add(asteroidMesh);
     }
+
+    // Create collision handler
+    CollisionHandler collisionHandler(1.0f);    // Adjust after need
 
     // Variables to track movement states based on user input
     bool rotateLeft = false;
@@ -108,6 +111,11 @@ int main() {
                 scene.add(asteroidMesh);
                 addedAsteroidMeshes.insert(asteroidMesh);
             }
+        }
+
+        // Check for collision between ship and asteroid
+        if (collisionHandler.checkCollision(spaceship->getMesh(), asteroids->getAsteroidMeshes())) {
+            CollisionHandler::handleCollision(spaceship->getMesh(), *asteroids, scene);
         }
 
         // Render scene

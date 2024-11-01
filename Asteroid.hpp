@@ -14,7 +14,7 @@ public:
     void update();
 
     // Checks if asteroid is out of bounds
-    bool isOutOfBounds(float boundaryX, float boundaryY) const;
+    bool isFadedOut() const;
 
     // Accessor for the asteroid mesh, so it can be added to scene
     std::shared_ptr<Mesh> getMesh() const;
@@ -23,6 +23,7 @@ private:
     std::shared_ptr<Mesh> mesh;     // Mesh representing asteroid
     Vector3 direction;              // Direction vector for movement
     float speed;                    // Speed of the asteroid
+    float opacity;                  // Current opacity
 };
 
 

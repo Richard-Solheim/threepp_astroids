@@ -4,11 +4,13 @@
 using namespace threepp;
 
 // Constructor: Initializes an asteroid outside play area with random diraction
-Asteroid::Asteroid(float boundaryX, float boundaryY) : speed(0.1f) {
+Asteroid::Asteroid(float boundaryX, float boundaryY) : speed(0.1f), opacity(1.0f) {
     // Create a simple sphere to represent asteroid
     auto geometry = SphereGeometry::create(1.0f, 8, 8);
     auto material = MeshBasicMaterial::create();
     material->color = Color::gray;
+    material->transparent = true;       // Enable transparency for fading out
+    material->opacity = opacity;        // Set initial opacity
 
     mesh = Mesh::create(geometry, material);
 
@@ -29,11 +31,19 @@ Asteroid::Asteroid(float boundaryX, float boundaryY) : speed(0.1f) {
 // Updates asteroid position based on direction and speed
 void Asteroid::update() {
     mesh->position += direction * speed;   // Move asteroid in direction based on speed
+
+    // Check if asteroid should start fading
+    if (std::abs(mesh->position.x) > 90.0f || std::abs(mesh->position.y) > 90.0f) {     // Adjust value after need
+        if (opacity > 0) {
+            opacity -= 0.02f;       // Adjust value for faster or slower fading
+            mesh->material()->as<MeshBasicMaterial>()->opacity = opacity;
+        }
+    }
 }
 
 // Checks if asteroid is out of bounds
-bool Asteroid::isOutOfBounds(float boundaryX, float boundaryY) const {
-    return std::abs(mesh->position.x) > boundaryX || std::abs(mesh->position.y) > boundaryY;
+bool Asteroid::isFadedOut() const {
+    return opacity <= 0.0f;
 }
 
 // Accessor for asteroid mesh

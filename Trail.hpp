@@ -12,7 +12,7 @@ public:
     Trail(int maxPoints, float pointSpacing, float trailWidth);
 
     // Adds a new point to the trail if it's far enough from the last one
-    void addPoint(const Vector3 &point);
+    void addPoint(const Vector3& point);
 
     // Returns list of trail circle meshes to be added for rendering
     const std::deque<std::shared_ptr<Mesh>>& getTrailMeshes() const;
