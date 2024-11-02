@@ -17,6 +17,9 @@ public:
     // Clears all asteroids
     void clearAsteroids(Scene& scene);
 
+    // Method to remove an asteroid by reference
+    void removeAsteroid(const std::shared_ptr<Mesh>& asteroid);
+
     // Returns all asteroid meshes
     const std::vector<std::shared_ptr<Mesh>>& getAsteroidMeshes() const;
 

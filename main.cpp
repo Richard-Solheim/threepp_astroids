@@ -152,8 +152,11 @@ int main() {
 
         // Check for collision between ship and asteroid
         if (collisionHandler.checkCollision(spaceship->getMesh(), asteroids->getAsteroidMeshes())) {
-            CollisionHandler::handleCollision(spaceship->getMesh(), *asteroids, scene);
+            CollisionHandler::handleShipCollision(spaceship->getMesh(), *asteroids, scene);
         }
+
+        // Check for collision between bullet and asteroid
+        collisionHandler.bulletAsteroidCollision(bullets, *asteroids, scene);
 
         // Render scene
         renderer.render(scene, camera);

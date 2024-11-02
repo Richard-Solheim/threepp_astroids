@@ -36,7 +36,7 @@ void Asteroids::spawnAsteroid(const Vector3 &spaceshipPosition) {
 // Updates all asteroids and removes those outside spawn range, then spawn new ones
 void Asteroids::update(const Vector3 &spaceshipPosition) {
     for (auto it = asteroids.begin(); it != asteroids.end();) {
-        auto &asteroid = *it;
+        auto& asteroid = *it;
         asteroid->update();
 
         // Remove faded out asteroids
@@ -58,19 +58,19 @@ void Asteroids::update(const Vector3 &spaceshipPosition) {
 }
 
 // Clears all current asteroids from the scene
-void Asteroids::clearAsteroids(Scene& scene) {
-    for (auto& asteroid : asteroids) {
+void Asteroids::clearAsteroids(Scene &scene) {
+    for (auto& asteroid: asteroids) {
         auto mesh = asteroid->getMesh();
 
         // Apply a fade out to remove asteroid meshes from the scene
         auto material = mesh->material()->as<MeshBasicMaterial>();
-        material->transparent = true;   // Transparency enabled
-        material->opacity = 1.0f;       // Start at full opacity
+        material->transparent = true;// Transparency enabled
+        material->opacity = 1.0f;    // Start at full opacity
 
         // Apply fade out loop
         while (material->opacity > 0.0f) {
-            material->opacity -= 0.1f;  // Reduce opacity over time
-            mesh->updateMatrixWorld();  // Update mesh state
+            material->opacity -= 0.1f;// Reduce opacity over time
+            mesh->updateMatrixWorld();// Update mesh state
         }
 
         // Remove mesh from scene
@@ -80,9 +80,10 @@ void Asteroids::clearAsteroids(Scene& scene) {
     }
     asteroids.clear();
     asteroidMeshes.clear();
-
 }
-
+void Asteroids::removeAsteroid(const std::shared_ptr<Mesh>& asteroid) {
+    asteroidMeshes.erase(std::remove(asteroidMeshes.begin(), asteroidMeshes.end(), asteroid), asteroidMeshes.end());
+}
 
 // Return all asteroid meshes
 const std::vector<std::shared_ptr<Mesh>>& Asteroids::getAsteroidMeshes() const {
