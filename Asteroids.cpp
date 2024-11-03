@@ -5,13 +5,17 @@
 
 Asteroids::Asteroids(int maxAsteroids, float spawnRange)
     : maxAsteroids(maxAsteroids), spawnRange(spawnRange) {
+    // Gives asteroid random rotation
+    std::srand(static_cast<unsigned int>(std::time(nullptr)));
+
     // Initialize list with max number asteroids
     asteroids.reserve(maxAsteroids);
     asteroidMeshes.reserve(maxAsteroids);
+
 }
 
 // Spawns a new asteroid within specified range around spaceship
-void Asteroids::spawnAsteroid(const Vector3 &spaceshipPosition) {
+void Asteroids::spawnAsteroid(const Vector3& spaceshipPosition) {
     auto asteroid = std::make_shared<Asteroid>(spawnRange, spawnRange);
 
     // Position at random point within spawnrange

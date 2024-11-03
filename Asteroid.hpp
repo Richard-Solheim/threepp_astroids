@@ -1,8 +1,9 @@
 #ifndef ASTEROID_HPP
 #define ASTEROID_HPP
-#include <memory>
 
 #include "threepp/threepp.hpp"
+#include <memory>
+
 using namespace threepp;
 
 class Asteroid {

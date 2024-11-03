@@ -1,16 +1,24 @@
 #include "Asteroid.hpp"
 #include <random>
+#include <ctime>
 
 using namespace threepp;
 
 // Constructor: Initializes an asteroid outside play area with random diraction
 Asteroid::Asteroid(float boundaryX, float boundaryY) : speed(0.1f), opacity(1.0f) {
-    // Create a simple sphere to represent asteroid
-    auto geometry = SphereGeometry::create(1.0f, 8, 8);
+    // Seed for random rotation on model
+    std::srand(static_cast<unsigned int>(std::time(nullptr)));
+
+    // Load PNG model
+    auto textureLoader = TextureLoader();
+    auto texture = textureLoader.load("models/Asteroid.png");
+
+    // Create a plane geometry to display the texture
+    auto geometry = PlaneGeometry::create(5.0f, 5.0f);
     auto material = MeshBasicMaterial::create();
-    material->color = Color::gray;
-    material->transparent = true;       // Enable transparency for fading out
-    material->opacity = opacity;        // Set initial opacity
+    material->map = texture;
+    material->transparent = true;
+    material->opacity = opacity;
 
     mesh = Mesh::create(geometry, material);
 

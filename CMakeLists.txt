@@ -16,6 +16,8 @@ FetchContent_MakeAvailable(threepp)
 
 add_subdirectory(external)
 
+file(COPY models/ DESTINATION ${CMAKE_BINARY_DIR}/models)
+
 add_executable(astroids main.cpp
         Spaceship.cpp
         Spaceship.hpp
@@ -32,4 +34,5 @@ add_executable(astroids main.cpp
         Bullet.cpp
         Bullet.hpp
 )
+
 target_link_libraries(astroids PRIVATE threepp::threepp imgui::imgui)

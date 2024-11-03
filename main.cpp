@@ -94,6 +94,8 @@ int main() {
         camera.position.y = spaceshipPosition.y;
         camera.position.z = spaceshipPosition.z + 40;
 
+        spaceship->update();
+
         // Ensure camera looks at spaceship
         camera.lookAt(spaceshipPosition);
 
