@@ -1,7 +1,7 @@
 #include "Bullet.hpp"
 
 // Constructor: Initializes bullet with position and direction
-Bullet::Bullet(const Vector3 &position, const Vector3 &direction)
+Bullet::Bullet(const Vector3& position, const Vector3& direction)
     : speed(0.5f), direction(direction) {
     // Create mesh to represent bullet
     auto geometry = SphereGeometry::create(0.2f, 8, 8);

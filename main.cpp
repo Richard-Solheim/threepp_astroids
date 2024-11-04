@@ -27,9 +27,9 @@ int main() {
     scene.background = Color::black;
 
     // Definiteions to change the game
-    float playArea = 100.0f;            // Defining play area
-    float starNumber = 400;             // Defining amount of stars
-    float maxAsteroids = 25;            // Defining max number asteroids
+    float playArea = 100.0f;          // Defining play area
+    float starNumber = 1000;            // Defining amount of stars
+    float maxAsteroids = 100;            // Defining max number asteroids
 
     // Create spaceship mesh with boundary limits and add to scene
     auto spaceship = std::make_shared<Spaceship>(playArea, playArea);
@@ -54,7 +54,7 @@ int main() {
     }
 
     // Create collision handler
-    CollisionHandler collisionHandler(1.0f);    // Adjust after need
+    CollisionHandler collisionHandler(2.0f);    // Adjust after need
 
     // Variables to track movement states based on user input
     bool rotateLeft = false;

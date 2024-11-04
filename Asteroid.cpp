@@ -6,8 +6,8 @@ using namespace threepp;
 
 // Constructor: Initializes an asteroid outside play area with random diraction
 Asteroid::Asteroid(float boundaryX, float boundaryY) : speed(0.1f), opacity(1.0f) {
-    // Seed for random rotation on model
-    std::srand(static_cast<unsigned int>(std::time(nullptr)));
+    // // Seed for random rotation on model
+    // std::srand(static_cast<unsigned int>(std::time(nullptr)));
 
     // Load PNG model
     auto textureLoader = TextureLoader();

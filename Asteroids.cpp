@@ -38,7 +38,7 @@ void Asteroids::spawnAsteroid(const Vector3& spaceshipPosition) {
 }
 
 // Updates all asteroids and removes those outside spawn range, then spawn new ones
-void Asteroids::update(const Vector3 &spaceshipPosition) {
+void Asteroids::update(const Vector3& spaceshipPosition) {
     for (auto it = asteroids.begin(); it != asteroids.end();) {
         auto& asteroid = *it;
         asteroid->update();
@@ -62,7 +62,7 @@ void Asteroids::update(const Vector3 &spaceshipPosition) {
 }
 
 // Clears all current asteroids from the scene
-void Asteroids::clearAsteroids(Scene &scene) {
+void Asteroids::clearAsteroids(Scene& scene) {
     for (auto& asteroid: asteroids) {
         auto mesh = asteroid->getMesh();
 
