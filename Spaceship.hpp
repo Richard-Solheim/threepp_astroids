@@ -2,6 +2,7 @@
 #define SPACESHIP_HPP
 
 #include "threepp/threepp.hpp"
+#include "MovementController.hpp"
 #include <memory>
 
 using namespace threepp;
@@ -15,23 +16,18 @@ public:
     void rotateLeft();      // Rotate counterclockwise
     void rotateRight();     // Rotate clockwise
     void moveForward();     // Move forward in direction it's facing
-    void update();
+    void update();          // Updates spaceship movement and physics
 
     // Provides access to spaceships mesh so it can be added to scene
     std::shared_ptr<Mesh> getMesh() const;
 
 private:
-    std::shared_ptr<Mesh> mesh;    // 3d object representing ship
-    float rotation;                // Current rotation angle in radians
-    float rotationSpeed;           // Speed ship rotates with
-    Vector3 velocity;              // Current velocity
-    float acceleration;            // Adds acceleration
-    float friction;                // Adds friction
-    float maxSpeed;                // Adds max speed
-
-    // Boundary limits for movement
-    float minX, maxX;   // X boundaries
-    float minY, maxY;   // Y boundaries
+    std::shared_ptr<Mesh> mesh;                 // 3d object representing ship
+    MovementController movementController;      // Handles spaceships movement logic
+    float rotationSpeed;                        // Speed ship rotates with
+    float acceleration;                         // Adds acceleration
+    float friction;                             // Adds friction
+    float maxSpeed;                             // Adds max speed
 
     // Internal helpers for updating rotation and screen wrapping
     void updateRotation();              // Applies the current rotation to the mesh

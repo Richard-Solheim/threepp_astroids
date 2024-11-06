@@ -33,6 +33,8 @@ add_executable(astroids main.cpp
         CollisionHandler.hpp
         Bullet.cpp
         Bullet.hpp
+        MovementController.cpp
+        MovementController.hpp
 )
 
 

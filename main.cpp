@@ -7,12 +7,13 @@
 #include <cmath>
 #include <sstream>
 
-#include "Spaceship.hpp"
-#include "Trail.hpp"
-#include "Stars.hpp"
 #include "Asteroids.hpp"
-#include "CollisionHandler.hpp"
 #include "Bullet.hpp"
+#include "CollisionHandler.hpp"
+#include "Spaceship.hpp"
+#include "Stars.hpp"
+#include "Trail.hpp"
+#include "cmake-build-debug/_deps/threepp-src/src/external/nlohmann/nlohmann/json.hpp"
 
 using namespace threepp;
 
@@ -28,7 +29,7 @@ int main() {
     // Definiteions to change the game
     float playArea = 100.0f;          // Defining play area
     float starNumber = 1000;            // Defining amount of stars
-    float maxAsteroids = 100;            // Defining max number asteroids
+    float maxAsteroids = 50;            // Defining max number asteroids
 
     float cameraWidth = 30;
     float cameraHeight = 20;
