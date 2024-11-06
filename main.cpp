@@ -1,8 +1,11 @@
 #include "threepp/extras/imgui/ImguiContext.hpp"
 #include "threepp/threepp.hpp"
 
+#include "threepp/canvas/Monitor.hpp"
+
 #include <set>
 #include <cmath>
+#include <sstream>
 
 #include "Spaceship.hpp"
 #include "Trail.hpp"
@@ -15,21 +18,51 @@ using namespace threepp;
 
 int main() {
     // Set up the rendering canvas and renderer
-    Canvas canvas;
+    Canvas canvas("Astroids game");
+    int height = monitor::monitorSize().height() / 2;
+    int width = monitor::monitorSize().width() / 2;
+    canvas.setSize({width, height});
     GLRenderer renderer{canvas.size()};
-
-    // Create a perspective camera and set an initial position
-    PerspectiveCamera camera(60, canvas.aspect(), 0.1, 1000);
-    camera.position.z = 40; // Initial distance from spaceship
-
-    // Set up the scene with black background
-    Scene scene;
-    scene.background = Color::black;
+    renderer.autoClear = false;
 
     // Definiteions to change the game
     float playArea = 100.0f;          // Defining play area
     float starNumber = 1000;            // Defining amount of stars
     float maxAsteroids = 100;            // Defining max number asteroids
+
+    float cameraWidth = 30;
+    float cameraHeight = 20;
+    auto camera = OrthographicCamera::create(-cameraWidth, cameraWidth, cameraHeight, -cameraHeight, 0.1f, 1000.0f);
+    camera->position.z = 500;  // Adjust as needed to see the entire scene
+
+    // Set up the scene with black background
+    Scene scene;
+    scene.background = Color::black;
+
+    // Create a scoreboard at the top of the screen
+    HUD hud(canvas.size());
+    FontLoader fontLoader;
+    const std::optional<Font> font = fontLoader.defaultFont();
+    TextGeometry::Options opts((font.value()), 20, 5);    // Font, size and thickness
+
+    // Creating the text
+    int score = 0;
+    std::stringstream scoreText;
+    scoreText << "Score: " << score;
+
+    auto scoreDisplay = Text2D(opts, scoreText.str());
+    scoreDisplay.setColor(Color::white);
+
+    // Adding text to the hud
+    hud.add(scoreDisplay, HUD::Options()
+        .setNormalizedPosition(Vector2(0.5f, 0.95f))    // Position in the top center
+        .setVerticalAlignment(HUD::VerticalAlignment::TOP)
+        .setHorizontalAlignment(HUD::HorizontalAlignment::CENTER));
+
+    canvas.onWindowResize([&](WindowSize size) {
+        renderer.setSize(size);
+        hud.setSize(size);
+    });
 
     // Create spaceship mesh with boundary limits and add to scene
     auto spaceship = std::make_shared<Spaceship>(playArea, playArea);
@@ -81,8 +114,10 @@ int main() {
     canvas.addKeyListener(*keyPressedListener);
     canvas.addKeyListener(*keyReleasedListener);
 
+    Clock clock;
+
     // Animation loop
-    canvas.animate([&] {
+    canvas.animate([&]() {
         // Control movement based off keys pressed
         if (rotateLeft)  spaceship->rotateLeft();
         if (rotateRight) spaceship->rotateRight();
@@ -90,14 +125,14 @@ int main() {
 
         // Update camera position to follow spaceship
         Vector3 spaceshipPosition = spaceship->getMesh()->position;
-        camera.position.x = spaceshipPosition.x;
-        camera.position.y = spaceshipPosition.y;
-        camera.position.z = spaceshipPosition.z + 40;
+        camera->position.x = spaceshipPosition.x;
+        camera->position.y = spaceshipPosition.y;
+        camera->position.z = spaceshipPosition.z + 40;
 
         spaceship->update();
 
         // Ensure camera looks at spaceship
-        camera.lookAt(spaceshipPosition);
+        camera->lookAt(spaceshipPosition);
 
         // Add current spaceship position to trail
         trail->addPoint(spaceshipPosition);
@@ -158,10 +193,17 @@ int main() {
         }
 
         // Check for collision between bullet and asteroid
-        collisionHandler.bulletAsteroidCollision(bullets, *asteroids, scene);
+        collisionHandler.bulletAsteroidCollision(bullets, *asteroids, scene, score);
+
+        // Update HUD to reflect score
+        scoreText.str("");
+        scoreText << "Score: " << score;
+        scoreDisplay.setText(scoreText.str());
 
         // Render scene
-        renderer.render(scene, camera);
+        renderer.clear();
+        renderer.render(scene, *camera);
+        hud.apply(renderer);
     });
 
 }

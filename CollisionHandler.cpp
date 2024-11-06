@@ -26,7 +26,7 @@ void CollisionHandler::handleShipCollision(const std::shared_ptr<Mesh>& ship, As
 }
 
 
-void CollisionHandler::bulletAsteroidCollision(std::vector<std::shared_ptr<Bullet>>& bullets, Asteroids& asteroids, Scene& scene) {
+void CollisionHandler::bulletAsteroidCollision(std::vector<std::shared_ptr<Bullet>>& bullets, Asteroids& asteroids, Scene& scene, int& score) {
     std::vector<std::shared_ptr<Bullet>> bulletsToRemove;
     std::vector<std::shared_ptr<Mesh>> asteroidsToRemove;
 
@@ -37,6 +37,9 @@ void CollisionHandler::bulletAsteroidCollision(std::vector<std::shared_ptr<Bulle
                 // Mark bullet and asteroid for removal
                 bulletsToRemove.push_back(bullet);
                 asteroidsToRemove.push_back(asteroid);
+
+                // Update the score
+                score += 10;
             }
         }
     }

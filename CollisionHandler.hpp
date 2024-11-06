@@ -21,7 +21,7 @@ public:
     static void handleShipCollision(const std::shared_ptr<Mesh>& ship, Asteroids& asteroids, Scene& scene);
 
     // Check for collision between bullet and asteroid
-    void bulletAsteroidCollision(std::vector<std::shared_ptr<Bullet>>& bullets, Asteroids& asteroids, Scene& scene);
+    void bulletAsteroidCollision(std::vector<std::shared_ptr<Bullet>>& bullets, Asteroids& asteroids, Scene& scene, int& score);
 
 private:
     float collisionDistance;    // Distance collision is detected at
